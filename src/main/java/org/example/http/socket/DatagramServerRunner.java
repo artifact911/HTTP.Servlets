@@ -1,4 +1,4 @@
-package org.example.socket;
+package org.example.http.socket;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
