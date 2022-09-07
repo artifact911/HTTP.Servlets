@@ -8,25 +8,32 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HttpServer {
 
+    private final ExecutorService pool;
     private final int port;
+    private boolean stopped;
 
-    public HttpServer(int port) {
+    public HttpServer(int port, int poolSize) {
         this.port = port;
+        this.pool = Executors.newFixedThreadPool(poolSize);
     }
 
     public void run() {
         try {
             var server = new ServerSocket(port);
-            // accept() принимает соединение от нашего клиента и представлен в виде класса Socket
-            var socket = server.accept();
-            processSocket(socket);
+            while (!stopped) {
+                // accept() принимает соединение от нашего клиента и представлен в виде класса Socket
+                var socket = server.accept();
+                System.out.println("Socket accepted");
+                pool.submit(() -> processSocket(socket));
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void processSocket(Socket socket) {
@@ -37,6 +44,7 @@ public class HttpServer {
             // step 1 обработка реквеста
             System.out.println("Request: " + new String(inputStream.readNBytes(400)));
 
+            Thread.sleep(10000);
             // step 2 отправка респонса
             var body = Files.readAllBytes(Path.of("src/main/resources", "example.html"));
             var headers = """
@@ -48,9 +56,13 @@ public class HttpServer {
             outputStream.write(System.lineSeparator().getBytes());
             outputStream.write(body);
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             // TODO 7/09/22 log error message
             e.printStackTrace();
         }
+    }
+
+    public void setStopped(boolean stopped) {
+        this.stopped = stopped;
     }
 }

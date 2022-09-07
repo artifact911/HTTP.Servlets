@@ -15,3 +15,4 @@
     Более того HttpClient позволяет нам работать в асинхронном режиме (т.е. не ждать ответа,
     а продолжать выполнение дальше после запроса получив CompletableFuture.class)
 18. Single threaded server
+19. Thread pooled server
