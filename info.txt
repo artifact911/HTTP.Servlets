@@ -16,3 +16,12 @@
     а продолжать выполнение дальше после запроса получив CompletableFuture.class)
 18. Single threaded server
 19. Thread pooled server
+22. Apache Tomcat. Введение
+    Установка: Скачиваем Apache Tomcat и распаковываем.
+    в данном случае src/work
+    запуск:
+        - win - переходим \apache-tomcat-10.0.23\bin и стартуем .\startup.bat
+            на localhost:8080 запустился Tomcat
+        - mac - переходим \apache-tomcat-10.0.23\bin и стартуем .\startup.sh
+                            на localhost:8080 запустился Tomcat
+    остановить: shutdown.bat или shutdown.sh
